@@ -149,7 +149,7 @@ class Player(Character):
     def hurt(self,health=0):
     	self.health-=health
       
-       
+
 # now some classes to handle things
 class gameThing (object):
 	  def __init__(self,myX=0,myY=0,name=""):
@@ -258,70 +258,74 @@ class GameWorld (object):
 	  		  th.xcoord=-1
 	  		  th.ycoord=-1
 	  	
-		
+
+def main():
 # Start setting ourselves up. make it 10*10
-MySize=10
-gw=GameWorld(MySize)
+  MySize=10
+  gw=GameWorld(MySize)
 
 # for debugging list the doors and draw the structure
 #afloor.listRooms()
 
 
-print("*** NEW GAME STARTING ***")
+  print("*** NEW GAME STARTING ***")
 # debugging 
-for gt in gw.gameThings:
-	print(gt.name,"at x:",gt.xcoord," y:",gt.ycoord)
-print()
+  for gt in gw.gameThings:
+  	print(gt.name,"at x:",gt.xcoord," y:",gt.ycoord)
+  print()
 
 
-finished=False
+  finished=False
 # game loop moving you around and interacting with stuff
-while not finished:
-	print()
-	gw.drawGame()
-	gw.drawStatus()
+  while not finished:
+    print()
+    gw.drawGame()
+    gw.drawStatus()
 # debug gw.characterGreet()
 #	greet and interact with you if you're in the same room as one of the characters
-	for gc in gw.gameChars:
-		if (gc.xcoord==gw.me.xcoord and gc.ycoord==gw.me.ycoord):
-			print(gc.greeting())
-			gc.playerInteract(gw.me)
-			finished=(gw.me.health<=0 or gw.me.health>400)
+    for gc in gw.gameChars:
+        if (gc.xcoord==gw.me.xcoord and gc.ycoord==gw.me.ycoord):
+            print(gc.greeting())
+            gc.playerInteract(gw.me)
+            finished=(gw.me.health<=0 or gw.me.health>400)
 
 # handle picking up things
-	if gw.countRoomThings()>0:
-		if input("Would you like to pick this stuff up Y/N?")=="Y":
-			gw.pickUpThings()
+    if gw.countRoomThings()>0:
+        if input("Would you like to pick this stuff up Y/N?")=="Y":
+          gw.pickUpThings()
 	
 	# check if i have all treasure
-	allTreasure=False
-	for gt in gw.gameThings:
-	  if isinstance(gt,gameTreasure) and (gt.xcoord!=-1 or gt.ycoord!=-1):
-		  print("you dont have:",gt.name)
-		  allTreasure=False	
-	finished=finished or allTreasure
+    allTreasure=False
+    for gt in gw.gameThings:
+        if isinstance(gt,gameTreasure) and (gt.xcoord!=-1 or gt.ycoord!=-1):
+            print("you dont have:",gt.name)
+            allTreasure=False
+    finished=finished or allTreasure
 	
 	# handle moving. 	
-	dlist=gw.getRoomDoorList()
-	usrInput=input("where would you like to go N/S/E/W/Q?")
+    dlist=gw.getRoomDoorList()
+    usrInput=input("where would you like to go N/S/E/W/Q?")
 	#only allow Go N/S/E/W in legitimate directions
-	if usrInput=="N" and "north" in dlist:
-		  gw.me.ycoord-=1 
-	if usrInput=="S" and "south" in dlist:
-		  gw.me.ycoord+=1
-	if usrInput=="E" and "east" in dlist:
-		  gw.me.xcoord+=1 
-	if usrInput=="W" and "west" in dlist:
-		  gw.me.xcoord-=1 
+    if usrInput=="N" and "north" in dlist:
+        gw.me.ycoord-=1
+    if usrInput=="S" and "south" in dlist:
+        gw.me.ycoord+=1
+    if usrInput=="E" and "east" in dlist:
+        gw.me.xcoord+=1
+    if usrInput=="W" and "west" in dlist:
+        gw.me.xcoord-=1
 	
-	finished= finished or usrInput=="Q"
+    finished= finished or usrInput=="Q"
 	
-	gw.moveCharacters()
+    gw.moveCharacters()
 
-print("*** GAME OVER ***")
-if gw.me.health<=0:
-	print("you died!")
-elif usrInput=="Q":
-	print("You Quit!")
-else:
-	print("congrats - you won!")
+  print("*** GAME OVER ***")
+  if gw.me.health<=0:
+    print("you died!")
+  elif usrInput=="Q":
+    print("You Quit!")
+  else:
+    print("congrats - you won!")
+
+if __name__ == "__main__":
+    main()
